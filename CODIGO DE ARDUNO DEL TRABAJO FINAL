@@ -1,0 +1,35 @@
+int val = 0;
+
+void setup() {
+    Serial.begin(9600);  // Iniciar comunicación serial
+
+    pinMode(5, INPUT);   // Pin del sensor de llama
+    pinMode(6, OUTPUT);  // Pin para el relay (agua)
+    pinMode(7, OUTPUT);  // Pin para el buzzer
+
+    // Iniciar con el buzzer y el agua activados
+    digitalWrite(6, LOW);  // Activar relay (agua)
+    digitalWrite(7, HIGH); // Activar buzzer
+
+    Serial.println("Sistema iniciado: Agua y buzzer activos sin llama.");
+}
+
+void loop() {
+    val = digitalRead(5);  // Leer valor del sensor
+    Serial.print("Valor del sensor: ");
+    Serial.println(val);   // Mostrar valor en monitor serial
+
+    delay(100);  // Espera pequeña para evitar ruido
+
+    // Lógica invertida: Si hay llama (val == 0), apagamos todo
+    if (val == 0) {  
+        Serial.println("Llama detectada: Apagando agua y buzzer.");
+        digitalWrite(6, HIGH);  // Apagar relay (agua)
+        digitalWrite(7, LOW);   // Apagar buzzer
+    } 
+    else {  // No hay llama (val == 1), activamos todo
+        Serial.println("Sin llama: Activando agua y buzzer.");
+        digitalWrite(6, LOW);  // Activar relay (agua)
+        digitalWrite(7, HIGH); // Activar buzzer
+    }
+}
